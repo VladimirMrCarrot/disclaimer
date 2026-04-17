@@ -1,200 +1,334 @@
-
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <title>Дисклеймер: Пан Морквин</title>
-    <style>
-        /* Імпорт шрифту Ubuntu */
-        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mrcarrot13666 — stream assets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#F2B666;
+  --brand-dim:rgba(242,182,102,0.12);
+  --brand-glow:rgba(242,182,102,0.22);
+  --font:'Ubuntu',sans-serif;
+  --mono:'Space Mono',monospace;
+}
 
-        :root {
-            --carrot-orange: #ff8c00;
-            --re-red: #cc0000;
-            --bg-overlay: rgba(10, 26, 31, 0.85); /* Темно-бірюзовий напівпрозорий */
-            --ui-white: #e5e5e5;
-        }
+/* ── DARK THEME (default) ── */
+[data-theme="dark"]{
+  --bg:#0d0d0d;
+  --surface:#141414;
+  --surface2:#1c1c1c;
+  --border:#222;
+  --border2:#2e2e2e;
+  --text:#e8e8e8;
+  --text-muted:#555;
+  --faint:#1e1e1e;
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.1);
+  --yellow:#eab308;--yellow-dim:rgba(234,179,8,0.1);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.1);
+}
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Ubuntu', sans-serif;
-            background-color: #050a0c;
-        }
+/* ── LIGHT THEME ── */
+[data-theme="light"]{
+  --bg:#f5f4f0;
+  --surface:#ffffff;
+  --surface2:#efefeb;
+  --border:#e0deda;
+  --border2:#d0ceca;
+  --text:#1a1917;
+  --text-muted:#888;
+  --faint:#f0eeea;
+  --green:#16a34a;--green-dim:rgba(22,163,74,0.08);
+  --yellow:#ca8a04;--yellow-dim:rgba(202,138,4,0.08);
+  --red:#dc2626;--red-dim:rgba(220,38,38,0.08);
+}
 
-        /* Фонове зображення припасоване до екрану */
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('banner.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: brightness(0.3) blur(2px); /* Робимо фон темнішим для читабельності */
-            z-index: -2;
-        }
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  overflow-x:hidden;
+  transition:background 250ms,color 250ms;
+}
 
-        /* Величезний напівпрозорий силует маскота */
-        .silhouette-overlay {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 120%;
-            height: 120%;
-            background-image: url('banner.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            transform: translate(-50%, -50%) rotate(-5deg);
-            opacity: 0.07;
-            z-index: -1;
-        }
+/* grain overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:999;
+}
 
-        /* Ефект ліній сканування */
-        .scanlines {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px;
-            z-index: 10;
-            pointer-events: none;
-        }
+/* ── THEME TOGGLE ── */
+.theme-btn{
+  position:fixed;top:16px;right:16px;z-index:200;
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--text-muted);font-size:16px;
+  transition:all 200ms;box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+.theme-btn:hover{color:var(--brand);border-color:var(--brand);}
 
-        .wrapper {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 50px;
-        }
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:100dvh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 24px 48px;
+  overflow:hidden;
+  text-align:center;
+}
+.hero-glow{
+  position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,var(--brand-dim) 0%,transparent 70%);
+  top:40%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.hero-mascot{
+  position:relative;z-index:2;
+  margin-bottom:28px;
+}
+.hero-mascot img{
+  height:220px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 32px var(--brand-glow));
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-        .main-card {
-            position: relative;
-            z-index: 20;
-            max-width: 1100px;
-            background: var(--bg-overlay);
-            border: 2px solid var(--carrot-orange);
-            box-shadow: 0 0 50px rgba(0,0,0,0.9);
-            padding: 60px;
-            border-radius: 4px;
-            backdrop-filter: blur(10px);
-        }
+.hero-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--brand);
+  margin-bottom:10px;position:relative;z-index:2;
+}
+.hero-title{
+  font-family:var(--mono);
+  font-size:clamp(24px,5.5vw,52px);
+  font-weight:700;letter-spacing:-0.02em;line-height:1;
+  position:relative;z-index:2;margin-bottom:6px;
+}
+.hero-title em{color:var(--brand);font-style:normal;}
+.hero-sub{
+  font-family:var(--mono);font-size:12px;
+  color:var(--text-muted);letter-spacing:0.08em;
+  position:relative;z-index:2;margin-bottom:44px;
+}
+.scroll-hint{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  color:var(--text-muted);font-size:11px;font-family:var(--mono);
+  animation:bob 2.2s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{opacity:0.35;transform:translateY(0)}50%{opacity:0.8;transform:translateY(5px)}}
 
-        /* Декоративний елемент зверху */
-        .main-card::before {
-            content: 'TACTICAL BROADCAST PROTOCOL // mrcarrot13666';
-            position: absolute;
-            top: -12px;
-            left: 30px;
-            background: var(--carrot-orange);
-            color: #000;
-            padding: 2px 15px;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
+/* ── MAIN ── */
+.main{max-width:760px;margin:0 auto;padding:0 20px 72px;}
 
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 40px;
-            border-bottom: 1px solid rgba(255, 140, 0, 0.2);
-            padding-bottom: 25px;
-        }
+.sec-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--text-muted);
+  margin-bottom:14px;padding-top:52px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
 
-        .header-logo {
-            width: 110px;
-            height: 110px;
-            background-image: url('banner.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            margin-right: 35px;
-            filter: drop-shadow(0 0 15px var(--carrot-orange));
-        }
+/* ── GRID ── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));
+  gap:10px;
+}
 
-        h1 {
-            font-size: 3.5em;
-            margin: 0;
-            color: var(--carrot-orange);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:20px 22px;
+  text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:12px;
+  transition:border-color 200ms,transform 200ms,box-shadow 200ms;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,var(--cc-bg,transparent) 0%,transparent 55%);
+  opacity:0;transition:opacity 200ms;pointer-events:none;
+}
+.card:hover{transform:translateY(-2px);border-color:var(--cc,var(--brand));box-shadow:0 0 18px var(--cc-glow,var(--brand-glow));}
+.card:hover::before{opacity:1;}
 
-        .content p {
-            font-size: 1.7em;
-            line-height: 1.45;
-            margin-bottom: 25px;
-            color: var(--ui-white);
-            font-weight: 300;
-        }
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.card-icon{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--faint);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.card-arr{font-size:16px;color:var(--text-muted);transition:transform 200ms,color 200ms;margin-top:1px;}
+.card:hover .card-arr{transform:translate(2px,-2px);color:var(--cc,var(--brand));}
 
-        .highlight {
-            color: var(--carrot-orange);
-            font-weight: 700;
-        }
+.card-title{font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.card-desc{font-size:13px;color:var(--text-muted);line-height:1.55;}
+.card-url{
+  font-family:var(--mono);font-size:10.5px;color:var(--text-muted);
+  background:var(--faint);border:1px solid var(--border);
+  border-radius:5px;padding:4px 9px;display:inline-block;word-break:break-all;
+}
 
-        .warning-strip {
-            border-left: 6px solid var(--re-red);
-            background: rgba(204, 0, 0, 0.15);
-            padding: 20px 30px;
-            margin: 35px 0;
-        }
+/* dot + badge */
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.dot-live{background:var(--green);box-shadow:0 0 5px var(--green);}
+.dot-soon{background:var(--text-muted);}
 
-        .warning-strip span {
-            color: var(--re-red);
-            font-weight: 700;
-            display: block;
-            margin-bottom: 5px;
-            font-size: 1.1em;
-            letter-spacing: 2px;
-        }
+.badge{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:0.06em;padding:2px 7px;border-radius:20px;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.badge-live{background:var(--green-dim);color:var(--green);}
+.badge-soon{background:var(--faint);color:var(--text-muted);}
+.badge-brand{background:var(--brand-dim);color:var(--brand);}
 
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 1.1em;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-        }
-    </style>
+/* card variants */
+.cc-green{--cc:var(--green);--cc-glow:rgba(34,197,94,0.18);--cc-bg:rgba(34,197,94,0.04);}
+.cc-yellow{--cc:var(--yellow);--cc-glow:rgba(234,179,8,0.15);--cc-bg:rgba(234,179,8,0.04);}
+.cc-red{--cc:var(--red);--cc-glow:rgba(239,68,68,0.18);--cc-bg:rgba(239,68,68,0.04);}
+
+/* disabled */
+.card-disabled{opacity:0.3;pointer-events:none;}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:20px 20px 36px;
+  max-width:760px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;
+}
+.ft{font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:0.08em;}
+.ft-dot{color:var(--brand);}
+
+/* ── MOBILE ── */
+@media(max-width:480px){
+  .hero-mascot img{height:170px;}
+  .hero-title{font-size:28px;}
+  .main,footer{padding-left:14px;padding-right:14px;}
+  .card{padding:16px 18px;}
+}
+</style>
 </head>
 <body>
 
-    <div class="background-container"></div>
-    <div class="silhouette-overlay"></div>
-    <div class="scanlines"></div>
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle theme">☀️</button>
 
-    <div class="wrapper">
-        <div class="main-card">
-            <div class="header">
-                <div class="header-logo"></div>
-                <h1>ПРАВИЛА ГРЯДКИ</h1>
-            </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-mascot">
+    <img src="./mascot.png" alt="MrCarrot" onerror="this.src='./mascot.jpg'">
+  </div>
+  <div class="hero-tag">stream assets · obs overlays</div>
+  <h1 class="hero-title">MR<em>CARROT</em>13666</h1>
+  <div class="hero-sub">// index</div>
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
 
-            <div class="content">
-                <p>Вітаю! Це — моя особиста територія творчості. Весь контент тут транслюється <span class="highlight">виключно українською</span>. Мої думки, жарти та коментарі не мають на меті когось образити. Проте, я залишаю за собою право захищати себе та свою спільноту від будь-яких проявів токсичності.</p>
+<!-- MAIN -->
+<main class="main">
 
-                <div class="warning-strip">
-                    <span>LIVE ADVISORY: 18+</span>
-                    <p style="margin: 0; font-size: 1.5em;">В ефірі може бути присутня <span class="highlight">ненормативна лексика</span>Це виключно емоційна складова, а не прояв агресії.</p>
-                </div>
+  <div class="sec-label">screens</div>
 
-                <p>Головна мета цих стрімів — поділитися з вами <span class="highlight">щирими враженнями</span>. Давайте проходити цей шлях разом, отримуючи задоволення від легендарних ігор!</p>
-            </div>
+  <div class="grid">
 
-            <div class="footer">
-                STATUS: SECURE // SUBJECT: mrcarrot13666
-            </div>
+    <a class="card cc-green" href="https://streams.mrcarrot13666.me/disclaimer" target="_blank" rel="noopener">
+      <div class="card-top">
+        <div class="card-icon">⚠️</div>
+        <span class="card-arr">↗</span>
+      </div>
+      <div>
+        <div class="card-title">
+          <span class="dot dot-live"></span>
+          Disclaimer
+          <span class="badge badge-live">LIVE</span>
         </div>
+        <div class="card-desc">Стартовий екран з дисклеймером для початку стріму.</div>
+      </div>
+      <div class="card-url">streams.mrcarrot13666.me/disclaimer</div>
+    </a>
+
+    <a class="card cc-yellow" href="https://streams.mrcarrot13666.me/roadmap" target="_blank" rel="noopener">
+      <div class="card-top">
+        <div class="card-icon">⏸️</div>
+        <span class="card-arr">↗</span>
+      </div>
+      <div>
+        <div class="card-title">
+          <span class="dot dot-live"></span>
+          Pause / Roadmap
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <div class="card-desc">Екран паузи з роадмапом поточного стріму.</div>
+      </div>
+      <div class="card-url">streams.mrcarrot13666.me/roadmap</div>
+    </a>
+
+    <a class="card cc-red" href="https://streams.mrcarrot13666.me/testing" target="_blank" rel="noopener">
+      <div class="card-top">
+        <div class="card-icon">🛠️</div>
+        <span class="card-arr">↗</span>
+      </div>
+      <div>
+        <div class="card-title">
+          <span class="dot dot-live"></span>
+          Tech Issue
+          <span class="badge badge-live">LIVE</span>
+        </div>
+        <div class="card-desc">Екран технічних неполадок під час прямого ефіру.</div>
+      </div>
+      <div class="card-url">streams.mrcarrot13666.me/testing</div>
+    </a>
+
+    <div class="card card-disabled">
+      <div class="card-top">
+        <div class="card-icon">➕</div>
+      </div>
+      <div>
+        <div class="card-title">
+          <span class="dot dot-soon"></span>
+          Next screen
+          <span class="badge badge-soon">SOON</span>
+        </div>
+        <div class="card-desc">Місце під наступний оверлей.</div>
+      </div>
     </div>
 
+  </div>
+
+</main>
+
+<footer>
+  <div class="ft"><span class="ft-dot">●</span> mrcarrot13666</div>
+  <div class="ft">streams.mrcarrot13666.me</div>
+</footer>
+
+<script>
+  let dark = true;
+  function toggleTheme(){
+    dark = !dark;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    document.getElementById('theme-btn').textContent = dark ? '☀️' : '🌙';
+  }
+</script>
 </body>
 </html>
